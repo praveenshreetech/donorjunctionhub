@@ -1,0 +1,2 @@
+D:/fultterproject/donorjunctionhub/android/app/.cxx/Debug/u3655215/x86/CMakeFiles/edit_cache.dir
+D:/fultterproject/donorjunctionhub/android/app/.cxx/Debug/u3655215/x86/CMakeFiles/rebuild_cache.dir

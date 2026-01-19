@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "235619700015",
+    "project_id": "donor-junction",
+    "storage_bucket": "donor-junction.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235619700015:android:80bad6fbd43739baa625da",
+        "android_client_info": {
+          "package_name": "com.donorjh"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWdQ1hDlGXQwIwyTVmTVpufrt8xVVgXYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:235619700015:android:d25cba38e6c002f6a625da",
+        "android_client_info": {
+          "package_name": "com.userjunction"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWdQ1hDlGXQwIwyTVmTVpufrt8xVVgXYc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
