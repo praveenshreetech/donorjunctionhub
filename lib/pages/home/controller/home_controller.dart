@@ -21,6 +21,28 @@ class HomeController extends GetxController {
     isloading(true);
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString("id");
+
+    if (id == null) {
+      bloglist.clear();
+      notificationList.clear();
+      userDetails.value = HospitalDetails();
+      isloading(false);
+      return;
+    }
+
+    if (id == "1") {
+      bloglist.clear();
+      notificationList.clear();
+      notiCount.value = 0;
+      userDetails.value = HospitalDetails(
+        id: id,
+        hospitalName: "Guest",
+        category: "Account",
+      );
+      isloading(false);
+      return;
+    }
+
     userDetails = await NeedFunction().getLoginUserDetails();
     var result = await NetworkHandler.get('${AppString.baseUrl}getMyPost/$id');
     if (result['success']) {
@@ -48,6 +70,10 @@ class HomeController extends GetxController {
     notiCount.value = 0;
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var id = prefs.getString("id");
+    if (id == null || id == "1") {
+      notificationList.clear();
+      return;
+    }
     var result =
         await NetworkHandler.get("${AppString.baseUrl}/getMyNotification/$id");
 

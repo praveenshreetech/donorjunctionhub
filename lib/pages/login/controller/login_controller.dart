@@ -24,6 +24,9 @@ class LoginController extends GetxController {
   late Timer timer;
   late final SmsRetriever smsRetriever;
 
+  String get normalizedMobileNumber =>
+      numbercontroller.text.replaceAll(RegExp(r'[^0-9]'), '').trim();
+
   mobilenumberpage() {
     if (tc.value) {
       Get.toNamed(AppRouters.mobile);
@@ -34,16 +37,23 @@ class LoginController extends GetxController {
   }
 
   sendotp(bool onNext) async {
-    String fcmkey = await FirebaseApi().initNotifications();
-    if (numbercontroller.text.trim().length == 10) {
+    String fcmkey = "";
+    try {
+      fcmkey = await FirebaseApi().initNotifications();
+    } catch (e) {
+      debugPrint('FCM init failed during login: $e');
+    }
+
+    if (normalizedMobileNumber.length == 10) {
       MobileNumberModel mobileNumberModel = MobileNumberModel(
-          mobile_number: numbercontroller.text.trim(), fcm_key: fcmkey);
+          mobileNo: normalizedMobileNumber, fcm_key: fcmkey);
       var result = await NetworkHandler.post(
           mobileNumberModel.tomap(), "${AppString.baseUrl}login");
 
       if (result['success']) {
         NeedFunction.toastmsg('OTP sending...');
         secondsRemaining.value = 30;
+        _cancelTimerIfRunning();
 
         resendtime();
         if (onNext) {
@@ -53,7 +63,7 @@ class LoginController extends GetxController {
           Get.toNamed(AppRouters.otp);
         }
       } else {
-        NeedFunction.toastmsg('Something went wrong. Please try again.');
+        NeedFunction.toastmsg(_buildErrorMessage(result, 'Unable to send OTP.'));
       }
     } else {
       NeedFunction.toastmsg('Mobile number must be 10 digits.');
@@ -66,7 +76,7 @@ class LoginController extends GetxController {
       NeedFunction.toastmsg('OTP must be 4 characters.');
     } else {
       OTPModel otpModel = OTPModel(
-          mobile_number: numbercontroller.text.trim(),
+          mobileNo: normalizedMobileNumber,
           otp: otpcontroller.text.trim());
       var result = await NetworkHandler.post(
           otpModel.tomap(), "${AppString.baseUrl}otp_verification");
@@ -95,7 +105,8 @@ class LoginController extends GetxController {
           }
         }
       } else {
-        NeedFunction.toastmsg("${result['message']}");
+        NeedFunction.toastmsg(
+            _buildErrorMessage(result, 'OTP verification failed.'));
       }
     }
   }
@@ -104,7 +115,41 @@ class LoginController extends GetxController {
     timer = Timer.periodic(const Duration(seconds: 1), (_) {
       if (secondsRemaining.value != 0) {
         secondsRemaining.value = secondsRemaining.value - 1;
-      } else {}
+      } else {
+        _cancelTimerIfRunning();
+      }
     });
+  }
+
+  String _buildErrorMessage(
+      Map<String, dynamic> result, String fallbackMessage) {
+    final message = (result['message'] ?? '').toString().trim();
+    if (message.isNotEmpty &&
+        message != 'null' &&
+        message != 'Unexpected server response' &&
+        message != 'Invalid server response') {
+      return message;
+    }
+
+    final status = result['status'];
+    if (status != null && status.toString() != '0') {
+      return '$fallbackMessage (status: $status)';
+    }
+
+    return fallbackMessage;
+  }
+
+  void _cancelTimerIfRunning() {
+    try {
+      timer.cancel();
+    } catch (_) {}
+  }
+
+  @override
+  void onClose() {
+    _cancelTimerIfRunning();
+    numbercontroller.dispose();
+    otpcontroller.dispose();
+    super.onClose();
   }
 }

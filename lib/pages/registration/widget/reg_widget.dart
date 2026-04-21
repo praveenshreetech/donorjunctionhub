@@ -114,7 +114,7 @@ class DropdownContainer extends StatelessWidget {
                 SizedBox(
                     width: 180.w,
                     child: DropdownButtonFormField(
-                        value: registrationController.category.value,
+                        initialValue: registrationController.category.value,
                         iconSize: 0,
                         style: NeedFunction.fontstyle(
                           TextStyle(

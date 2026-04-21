@@ -147,7 +147,7 @@ Widget dropdown(NewBlogConroller blogcontroller) {
             decoration: const InputDecoration(
               border: InputBorder.none,
             ),
-            value: blogcontroller.postType.value,
+            initialValue: blogcontroller.postType.value,
             items: AppString.postTypeList
                 .map((item) => DropdownMenuItem(
                       value: item,

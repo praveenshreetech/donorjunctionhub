@@ -16,6 +16,21 @@ class DlistController extends GetxController {
   RxDouble cLng = 0.0.obs;
   RxBool isloading = false.obs;
 
+  bool _canShowDonorForUser(DonorData donor) {
+    if (donor.bloodGroup == null) {
+      return false;
+    }
+
+    final userState = userinfo.value.state?.trim() ?? '';
+    final donorState = donor.state?.trim() ?? '';
+
+    if (userState.isEmpty) {
+      return true;
+    }
+
+    return donorState == userState;
+  }
+
   getAlldonor() async {
     isloading(true);
     userinfo = await NeedFunction().getLoginUserDetails();
@@ -25,11 +40,13 @@ class DlistController extends GetxController {
       alllist.value = allDonorsModel.data ?? [];
       donorslist.clear();
       for (var i = 0; i < alllist.length; i++) {
-        if (alllist[i].bloodGroup != null &&
-            alllist[i].state == userinfo.value.state) {
+        if (_canShowDonorForUser(alllist[i])) {
           donorslist.add(alllist[i]);
         }
       }
+      isloading(false);
+    } else {
+      donorslist.clear();
       isloading(false);
     }
   }
@@ -44,12 +61,14 @@ class DlistController extends GetxController {
       alllist.value = allDonorsModel.data ?? [];
       donorslist.clear();
       for (var i = 0; i < alllist.length; i++) {
-        if (alllist[i].bloodGroup != null &&
-            alllist[i].state == userinfo.value.state) {
+        if (_canShowDonorForUser(alllist[i])) {
           donorslist.add(alllist[i]);
         }
       }
 
+      isloading(false);
+    } else {
+      donorslist.clear();
       isloading(false);
     }
   }

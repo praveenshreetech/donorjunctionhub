@@ -32,6 +32,17 @@ class MapController extends GetxController {
 
   var mapCircle = <Circle>{}.obs;
 
+  bool _matchesUserState(DonorData donor) {
+    final userState = hospitalDetails.value.state?.trim() ?? '';
+    final donorState = donor.state?.trim() ?? '';
+
+    if (userState.isEmpty) {
+      return true;
+    }
+
+    return donorState == userState;
+  }
+
   checkpermission() async {
     isLoading(true);
     LatLng? locationData = await Mapfunction().getCurrentLocation();
@@ -79,7 +90,7 @@ class MapController extends GetxController {
       AllDonorsModel allDonorsModel = AllDonorsModel.fromJson(result);
       alldonorslist.value = allDonorsModel.data ?? [];
       for (var i = 0; i < alldonorslist.length; i++) {
-        if (alldonorslist[i].state == hospitalDetails.value.state &&
+        if (_matchesUserState(alldonorslist[i]) &&
             alldonorslist[i].latitude != null &&
             alldonorslist[i].lastDonate != null) {
           double lat = double.parse(alldonorslist[i].latitude ?? "00.0");

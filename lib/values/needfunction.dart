@@ -38,9 +38,9 @@ class NeedFunction {
       if (result['success']) {
         HospitalModel hospitalModel = HospitalModel.fromJson(result);
         hospitalDetails.value = hospitalModel.data!;
-        return hospitalDetails;
       }
     }
+    return hospitalDetails;
   }
 
   bloodreadyImg(String date) {
@@ -104,5 +104,10 @@ class NeedFunction {
     } else {
       return false;
     }
+  }
+
+  Future<String?> getLoginId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString("id");
   }
 }

@@ -30,7 +30,9 @@ class Home extends StatelessWidget {
                     }, homecontroller.notiCount.value),
               homecontroller.isloading.value
                   ? Container()
-                  : slider(homecontroller.bloglist),
+                  : homecontroller.bloglist.isEmpty
+                      ? Container()
+                      : slider(homecontroller.bloglist),
               SizedBox(
                 height: 30.h,
               ),

@@ -114,6 +114,23 @@ class _SliderState extends State<Slider> {
                     "${widget.blist.hospitalId}/${widget.blist.image}"),
                 width: 125.w,
                 height: 125.h,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 125.w,
+                    height: 125.h,
+                    decoration: BoxDecoration(
+                      color: AppColors.primarywhite,
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    alignment: Alignment.center,
+                    child: Icon(
+                      Icons.image_not_supported_outlined,
+                      color: AppColors.lightTextColor,
+                      size: 28.sp,
+                    ),
+                  );
+                },
               ),
               SizedBox(
                 width: 5.w,

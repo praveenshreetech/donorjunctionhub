@@ -39,7 +39,7 @@ Widget switchSetting(VoidCallback ontap, String name, RxBool onValue) {
             ),
           ),
           Switch(
-              activeColor: AppColors.primaryColor,
+              activeThumbColor: AppColors.primaryColor,
               activeTrackColor: AppColors.primaryColor.withValues(alpha: 0.5),
               inactiveThumbColor: AppColors.primaryblock,
               value: onValue.value,
