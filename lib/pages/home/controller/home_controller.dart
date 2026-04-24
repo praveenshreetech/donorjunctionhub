@@ -44,7 +44,7 @@ class HomeController extends GetxController {
     }
 
     userDetails = await NeedFunction().getLoginUserDetails();
-    var result = await NetworkHandler.get('${AppString.baseUrl}getMyPost/$id');
+    var result = await NetworkHandler.get('getMyPost/$id');
     if (result['success']) {
       AllBlogModel blogModel = AllBlogModel.fromJson(result);
       bloglist.value = blogModel.data ?? [];
@@ -75,7 +75,7 @@ class HomeController extends GetxController {
       return;
     }
     var result =
-        await NetworkHandler.get("${AppString.baseUrl}/getMyNotification/$id");
+        await NetworkHandler.get("getMyNotification/$id");
 
     if (result['success']) {
       NotificationModel notificationModel = NotificationModel.fromJson(result);

@@ -1,19 +1,19 @@
 class AppString {
-  static String baseUrl = "http://192.168.1.55/newdoner/api/hospital/";
+  static String baseUrl = "http://192.168.1.55/donorjunction_full/donorjunction_api/api/hospital/";
 
   // Local PHP backend:
   // "http://192.168.1.55/newdoner/api/hospital/";
   // "https://shreetechhub.com/demosite/donorjunction/api/hospital/";
   // "http://isrdconnects.org/demosite/donorjunction/api/hospital/";
 
-  static String imgUrl = "http://192.168.1.55/newdoner/assets/uploads/";
+  static String imgUrl = "http://192.168.1.55/donorjunction_full/donorjunction_api/assets/uploads/";
   // "http://192.168.1.55/newdoner/assets/uploads/";
   // "https://shreetechhub.com/demosite/donorjunction/assets/uploads/";
   // "http://isrdconnects.org/demosite/donorjunction/assets/uploads/";
 
   static String mapKey = "AIzaSyBTSikEuYxDhHGFq6JBITLvpTfzc7KRkfk";
 
-  static String chatURI = 'http://192.168.1.55/newdoner/api/chats/';
+  static String chatURI = 'http://192.168.1.55/donorjunction_full/donorjunction_api/api/chats/';
 
   // 'http://192.168.1.55/newdoner/api/chats/';
   // 'https://shreetechhub.com/demosite/donorjunction/api/chats/';

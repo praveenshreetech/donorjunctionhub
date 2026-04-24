@@ -10,7 +10,7 @@ class MobileNumberModel {
   });
   Map<String, dynamic> tomap() {
     return <String, dynamic>{
-      'mobile_no': mobileNo,
+      'mobile_number': mobileNo,
       'fcm_key': fcm_key
     };
   }
@@ -25,6 +25,6 @@ class OTPModel {
     required this.otp,
   });
   Map<String, dynamic> tomap() {
-    return <String, dynamic>{'mobile_no': mobileNo, 'otp': otp};
+    return <String, dynamic>{'mobile_number': mobileNo, 'otp': otp};
   }
 }

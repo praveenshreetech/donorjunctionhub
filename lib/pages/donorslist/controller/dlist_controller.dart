@@ -34,7 +34,7 @@ class DlistController extends GetxController {
   getAlldonor() async {
     isloading(true);
     userinfo = await NeedFunction().getLoginUserDetails();
-    var result = await NetworkHandler.get("${AppString.baseUrl}getAllDonor");
+    var result = await NetworkHandler.get("getAllDonor");
     if (result['success']) {
       AllDonorsModel allDonorsModel = AllDonorsModel.fromJson(result);
       alllist.value = allDonorsModel.data ?? [];
@@ -55,7 +55,7 @@ class DlistController extends GetxController {
     isloading(true);
     userinfo = await NeedFunction().getLoginUserDetails();
     var result = await NetworkHandler.post({"blood_group": bloodShow.value},
-        "${AppString.baseUrl}search_by_blood");
+        "search_by_blood");
     if (result['success']) {
       AllDonorsModel allDonorsModel = AllDonorsModel.fromJson(result);
       alllist.value = allDonorsModel.data ?? [];

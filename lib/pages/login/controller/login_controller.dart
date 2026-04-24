@@ -22,7 +22,7 @@ class LoginController extends GetxController {
 
   Rx<HospitalDetails> hospitadetails = HospitalDetails().obs;
   late Timer timer;
-  late final SmsRetriever smsRetriever;
+  SmsRetriever? smsRetriever; // ✅ Changed to nullable to prevent LateInitializationErrors
 
   String get normalizedMobileNumber =>
       numbercontroller.text.replaceAll(RegExp(r'[^0-9]'), '').trim();
@@ -48,10 +48,10 @@ class LoginController extends GetxController {
       MobileNumberModel mobileNumberModel = MobileNumberModel(
           mobileNo: normalizedMobileNumber, fcm_key: fcmkey);
       var result = await NetworkHandler.post(
-          mobileNumberModel.tomap(), "${AppString.baseUrl}login");
+          mobileNumberModel.tomap(), "login");
 
       if (result['success']) {
-        NeedFunction.toastmsg('OTP sending...');
+        NeedFunction.toastmsg(result['message'] ?? 'OTP Sent');
         secondsRemaining.value = 30;
         _cancelTimerIfRunning();
 
@@ -63,7 +63,7 @@ class LoginController extends GetxController {
           Get.toNamed(AppRouters.otp);
         }
       } else {
-        NeedFunction.toastmsg(_buildErrorMessage(result, 'Unable to send OTP.'));
+        NeedFunction.toastmsg(result['message'] ?? 'Unable to send OTP. Please try again.');
       }
     } else {
       NeedFunction.toastmsg('Mobile number must be 10 digits.');
@@ -79,30 +79,37 @@ class LoginController extends GetxController {
           mobileNo: normalizedMobileNumber,
           otp: otpcontroller.text.trim());
       var result = await NetworkHandler.post(
-          otpModel.tomap(), "${AppString.baseUrl}otp_verification");
+          otpModel.tomap(), "otp_verification");
       if (result['success']) {
         HospitalModel hospitalModel = HospitalModel.fromJson(result);
-        hospitadetails.value = hospitalModel.data!;
-        pref.setString("id", hospitadetails.value.id ?? "");
-        if (hospitadetails.value.hospitalName == "") {
-          Get.toNamed(AppRouters.registration);
-        } else {
-          if (hospitadetails.value.status == '1') {
-            Get.toNamed(AppRouters.done);
+        
+        // ✅ Added null check for hospital data
+        if (hospitalModel.data != null) {
+          hospitadetails.value = hospitalModel.data!;
+          pref.setString("id", hospitadetails.value.id ?? "");
+          
+          if (hospitadetails.value.hospitalName == "") {
+            Get.toNamed(AppRouters.registration);
           } else {
-            Get.dialog(
-              barrierDismissible: false,
-              PopScope(
-                canPop: false,
-                child: Dialog(
-                  backgroundColor: Colors.transparent,
-                  child: MsgInfo(
-                    msg: 'Still Your document verification is in progress.',
+            if (hospitadetails.value.status == '1') {
+              Get.toNamed(AppRouters.done);
+            } else {
+              Get.dialog(
+                barrierDismissible: false,
+                PopScope(
+                  canPop: false,
+                  child: Dialog(
+                    backgroundColor: Colors.transparent,
+                    child: MsgInfo(
+                      msg: 'Still Your document verification is in progress.',
+                    ),
                   ),
                 ),
-              ),
-            );
+              );
+            }
           }
+        } else {
+          NeedFunction.toastmsg('Login successful but no user data found.');
         }
       } else {
         NeedFunction.toastmsg(
@@ -148,8 +155,6 @@ class LoginController extends GetxController {
   @override
   void onClose() {
     _cancelTimerIfRunning();
-    numbercontroller.dispose();
-    otpcontroller.dispose();
     super.onClose();
   }
 }

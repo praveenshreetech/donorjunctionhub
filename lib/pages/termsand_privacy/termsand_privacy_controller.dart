@@ -28,7 +28,7 @@ class TermsandPrivacyController extends GetxController {
         ),
       )
       ..loadRequest(
-          Uri.parse("https://shreetechhub.com/demosite/Termsandprivacy.html"));
+          Uri.parse("http://192.168.1.55/donorjunction_full/donorjunction_api/Termsandprivacy.html"));
   }
 
   @override

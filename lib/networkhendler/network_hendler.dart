@@ -6,9 +6,9 @@ import 'package:donorjunctionhub/values/strings.dart';
 class NetworkHandler {
   static final Dio dio = Dio(
     BaseOptions(
-      connectTimeout: const Duration(seconds: 20),
-      receiveTimeout: const Duration(seconds: 20),
-      sendTimeout: const Duration(seconds: 20),
+      connectTimeout: const Duration(seconds: 60),
+      receiveTimeout: const Duration(seconds: 60),
+      sendTimeout: const Duration(seconds: 60),
       responseType: ResponseType.plain,
       followRedirects: true,
       validateStatus: (status) => status != null && status >= 200 && status < 500,
@@ -22,10 +22,12 @@ class NetworkHandler {
   static Future<Map<String, dynamic>> post(
       Map<String, dynamic> body, String endpoint) async {
     try {
+      print('DEBUG: NOW CALLING URL: ${buildUrl(endpoint)}');
       final response = await dio.post(
         buildUrl(endpoint),
         data: FormData.fromMap(body),
       );
+      print('DEBUG: RESPONSE BODY: ${response.data}');
       return _parseResponse(response.data, response.statusCode);
     } on DioException catch (e) {
       return _networkErrorResponse(e);

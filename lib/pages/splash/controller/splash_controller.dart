@@ -34,7 +34,7 @@ class SplashController extends GetxController {
         return;
       }
 
-      var reslut = await NetworkHandler.get("${AppString.baseUrl}myDetails/$id");
+      var reslut = await NetworkHandler.get("myDetails/$id");
       if (reslut['success']) {
         HospitalModel hospitalModel = HospitalModel.fromJson(reslut);
         hospitalDetails.value = hospitalModel.data!;

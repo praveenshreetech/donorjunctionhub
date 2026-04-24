@@ -104,18 +104,39 @@ class RegistrationController extends GetxController {
   }
 
   getaddress() async {
-    final LatLng latLng = await Mapfunction().getCurrentLocation();
-    orgLat.value = latLng.latitude.toString();
-    orgLon.value = latLng.longitude.toString();
-    List<Placemark> placemarks =
-        await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
-    orgAddress.value =
-        "${placemarks[0].subThoroughfare},${placemarks[1].street},${placemarks[1].locality},${placemarks[1].thoroughfare},${placemarks[2].locality},${placemarks[1].administrativeArea},${placemarks[1].country},${placemarks[1].postalCode}.";
-    orgPincode.value = "${placemarks[1].postalCode}";
-    orgState.value = "${placemarks[1].administrativeArea}";
-    orgCountry.value = "${placemarks[1].country}";
-    orgcity.value = "${placemarks[2].locality}";
-    addressDone(true);
+    try {
+      final LatLng latLng = await Mapfunction().getCurrentLocation();
+      orgLat.value = latLng.latitude.toString();
+      orgLon.value = latLng.longitude.toString();
+      
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latLng.latitude, latLng.longitude);
+      
+      if (placemarks.isNotEmpty) {
+        Placemark place = placemarks[0];
+        
+        // Build address safely
+        String address = "";
+        if (place.street != null && place.street!.isNotEmpty) address += "${place.street}, ";
+        if (place.subLocality != null && place.subLocality!.isNotEmpty) address += "${place.subLocality}, ";
+        if (place.locality != null && place.locality!.isNotEmpty) address += "${place.locality}, ";
+        if (place.administrativeArea != null && place.administrativeArea!.isNotEmpty) address += "${place.administrativeArea}, ";
+        if (place.postalCode != null && place.postalCode!.isNotEmpty) address += "${place.postalCode}.";
+        
+        orgAddress.value = address;
+        orgPincode.value = place.postalCode ?? "";
+        orgState.value = place.administrativeArea ?? "";
+        orgCountry.value = place.country ?? "";
+        orgcity.value = place.locality ?? "";
+        addressDone(true);
+      } else {
+        NeedFunction.toastmsg("Could not determine address. Please try again.");
+      }
+      validationcheck();
+    } catch (e) {
+      debugPrint("Location error: $e");
+      NeedFunction.toastmsg("Failed to get location. Please enable GPS.");
+    }
   }
 
   orgRegistration() async {
@@ -139,7 +160,7 @@ class RegistrationController extends GetxController {
         profile_img: File(orgProfileImg.value),
       );
       var response = await NetworkHandler.post(
-          await registraModel.tomap(), "${AppString.baseUrl}update_my_detail");
+          await registraModel.tomap(), "update_my_detail");
 
       if (response['success']) {
         Get.dialog(
