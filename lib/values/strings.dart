@@ -29,3 +29,6 @@ class AppString {
 
   static List postTypeList = ['Select Blog Type', 'Blood donation camp', 'Promotion', 'Meeting'];
 }
+
+
+// adding dummy text in donorjunctionhub
